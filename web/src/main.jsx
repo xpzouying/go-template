@@ -8,6 +8,7 @@ import './index.css'
 import Root from "./routes/root";
 import About from './pages/About';
 import Index from './pages/Index';
+import { loader as indexLoader } from './helpers/loader_index';
 import Contact from './routes/contact';
 
 const router = createBrowserRouter([
@@ -22,6 +23,7 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <Index />,
+        loader: indexLoader,
       },
       {
         path: "about",

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"embed"
 	"flag"
 
 	"github.com/gin-gonic/gin"
@@ -8,6 +9,12 @@ import (
 	"github.com/xpzouying/go-template/api"
 	"github.com/xpzouying/go-template/internal/service"
 )
+
+//go:embed web/dist/*
+var buildFS embed.FS
+
+//go:embed web/dist/index.html
+var indexPage []byte
 
 func main() {
 	var (
@@ -19,7 +26,7 @@ func main() {
 	r := gin.New()
 	s := service.New()
 
-	api.RegisterService(r, s)
+	api.RegisterService(r, s, indexPage, buildFS)
 
 	logrus.Infof("listening on port %v", port)
 	logrus.Fatal(r.Run(port))

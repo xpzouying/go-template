@@ -21,3 +21,5 @@
 go.work
 
 node_modules/
+
+build/

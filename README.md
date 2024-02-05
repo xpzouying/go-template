@@ -19,9 +19,32 @@
   - 日志标准化
   - API 限流
 
+# 2. 运行
+
+## 生产环境
+
+1. 编译前端
+
+```bash
+cd ./web
+npm run build
+```
+
+2. 编译后端
+
+由于后端会 serving 前端的页面，所以需要先编译前端的页面。
+
+```bash
+go build .
+```
+
 # 参考资料
 
 ## 前端框架
 
 - shadcn/ui
 - [daisyui](https://daisyui.com/)
+
+```
+
+```

@@ -28,7 +28,7 @@ export default function Root() {
             </li>
 
             <li>
-              <Link to={`/contacts/1`}>Your Name</Link>
+              <Link to={`/contacts/1`}>Your Names</Link>
             </li>
             <li>
               <Link to={`/contacts/2`}>Your Friend</Link>

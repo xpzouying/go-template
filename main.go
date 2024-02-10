@@ -18,15 +18,23 @@ var indexPage []byte
 
 func main() {
 	var (
-		port string
+		port       string // http server port
+		dev        bool   // 是否为开发模式
+		staticPath string // 静态文件路径
 	)
 	flag.StringVar(&port, "port", ":8080", "port to listen on")
+	flag.BoolVar(&dev, "dev", true, "enable dev mode")
+	flag.StringVar(&staticPath, "static", "web/dist", "static file path")
 	flag.Parse()
+
+	logrus.Infof("start with mode: dev_mode=%v", dev)
 
 	r := gin.New()
 	s := service.New()
 
-	api.RegisterService(r, s, indexPage, buildFS)
+	staticConfig := api.NewStaticFSConfig(api.WithDevMode(staticPath))
+
+	api.RegisterService(r, s, staticConfig)
 
 	logrus.Infof("listening on port %v", port)
 	logrus.Fatal(r.Run(port))

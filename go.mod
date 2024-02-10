@@ -6,6 +6,7 @@ require (
 	github.com/gin-contrib/static v0.0.1
 	github.com/gin-gonic/gin v1.9.1
 	github.com/sirupsen/logrus v1.9.3
+	github.com/soulteary/gin-static v0.0.6
 )
 
 require (

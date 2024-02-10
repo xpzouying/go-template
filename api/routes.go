@@ -1,25 +1,26 @@
 package api
 
 import (
-	"embed"
 	"net/http"
 
-	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
+	static "github.com/soulteary/gin-static"
 	"github.com/xpzouying/go-template/api/response"
 	"github.com/xpzouying/go-template/internal/service"
-	"github.com/xpzouying/go-template/pkg/embed_folder"
 )
 
 func RegisterService(
 	r *gin.Engine,
 	service service.Service,
-	indexPage []byte,
-	buildFS embed.FS,
+	staticConfig *StaticFSConfig,
 ) {
-	setWebRouter(r, buildFS, indexPage)
+	setWebRouter(r, staticConfig)
 
 	r.GET("/status", makeStatus(service))
+
+	r.NoRoute(func(c *gin.Context) {
+		c.Redirect(http.StatusMovedPermanently, "/")
+	})
 }
 
 func makeStatus(s service.Service) func(c *gin.Context) {
@@ -32,11 +33,24 @@ func makeStatus(s service.Service) func(c *gin.Context) {
 	}
 }
 
-func setWebRouter(r *gin.Engine, buildFS embed.FS, indexPage []byte) {
+func setWebRouter(r *gin.Engine, staticConfig *StaticFSConfig) {
 
-	r.Use(static.Serve("/", embed_folder.EmbedFolder(buildFS, "web/dist")))
+	if staticConfig.Mode.IsDev() {
+		r.Use(static.Serve("/", static.LocalFile(staticConfig.StaticFilesPath, false)))
+	} else {
+		r.NoRoute(
+			func(c *gin.Context) {
+				if c.Request.URL.Path == "/about" {
+					c.Data(
+						http.StatusOK,
+						"text/html; charset=utf-8",
+						[]byte("About Page"),
+					)
+				}
+			},
+			static.ServeEmbed("/", staticConfig.embedFS),
+		)
+	}
 
-	r.NoRoute(func(c *gin.Context) {
-		c.Data(http.StatusOK, "text/html", indexPage)
-	})
+	// r.Use(static.Serve("/", embed_folder.EmbedFolder(buildFS, "web/dist")))
 }

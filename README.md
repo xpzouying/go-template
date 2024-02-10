@@ -45,6 +45,6 @@ go build .
 - shadcn/ui
 - [daisyui](https://daisyui.com/)
 
-```
+## 后端组件
 
-```
+- [gin-static](https://github.com/soulteary/gin-static)

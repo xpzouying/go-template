@@ -11,10 +11,12 @@ import (
 
 func RegisterService(
 	r *gin.Engine,
-	service service.Service,
+	service *service.Service,
 	staticConfig *StaticFSConfig,
 ) {
 	setWebRouter(r, staticConfig)
+
+	setupFileRouter(r, service)
 
 	r.GET("/status", makeStatus(service))
 
@@ -23,7 +25,7 @@ func RegisterService(
 	})
 }
 
-func makeStatus(s service.Service) func(c *gin.Context) {
+func makeStatus(s *service.Service) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		ctx := c.Request.Context()
 
@@ -53,4 +55,10 @@ func setWebRouter(r *gin.Engine, staticConfig *StaticFSConfig) {
 	}
 
 	// r.Use(static.Serve("/", embed_folder.EmbedFolder(buildFS, "web/dist")))
+}
+
+func setupFileRouter(r *gin.Engine, service *service.Service) {
+	subGroup := r.Group("/files")
+
+	subGroup.POST("/upload", service.Upload)
 }

@@ -22,6 +22,14 @@ func WriteSuccess(c *gin.Context, data interface{}) {
 		})
 }
 
+func WriteError(c *gin.Context, errMsg string) {
+	c.JSON(http.StatusOK,
+		Response{
+			Success: false,
+			Error:   errMsg,
+		})
+}
+
 type StatusResult struct {
 	Version   string `json:"version"`
 	StartTime string `json:"start_time"`

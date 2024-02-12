@@ -7,6 +7,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 	"github.com/xpzouying/go-template/api"
+	"github.com/xpzouying/go-template/internal/domain"
+	"github.com/xpzouying/go-template/internal/repo"
 	"github.com/xpzouying/go-template/internal/service"
 )
 
@@ -30,7 +32,12 @@ func main() {
 	logrus.Infof("start with mode: dev_mode=%v", dev)
 
 	r := gin.New()
-	s := service.New()
+
+	var s *service.Service
+	{
+		fileDO := newFileDO()
+		s = service.New(fileDO)
+	}
 
 	staticConfig := api.NewStaticFSConfig(api.WithDevMode(staticPath))
 
@@ -38,4 +45,10 @@ func main() {
 
 	logrus.Infof("listening on port %v", port)
 	logrus.Fatal(r.Run(port))
+}
+
+func newFileDO() domain.FileDO {
+	repo := repo.NewLocalFileRepo(repo.WithLocalFilePath("/tmp"))
+
+	return domain.NewFileDO(repo)
 }

@@ -21,6 +21,12 @@ type (
 	LocalFileConfigOption func(*LocalFileConfig)
 )
 
+func newDefLocalFileConfig() *LocalFileConfig {
+	return &LocalFileConfig{
+		Path: "/tmp",
+	}
+}
+
 func WithLocalFilePath(path string) LocalFileConfigOption {
 	return func(cfg *LocalFileConfig) {
 		cfg.Path = path
@@ -39,15 +45,9 @@ func NewLocalFileRepo(options ...LocalFileConfigOption) *LocalFileRepo {
 	}
 }
 
-func newDefLocalFileConfig() *LocalFileConfig {
-	return &LocalFileConfig{
-		Path: "/tmp",
-	}
-}
+func (r *LocalFileRepo) Save(_ context.Context, files domain.FileInfos) (domain.FilesUploadResult, error) {
 
-func (r *LocalFileRepo) Save(_ context.Context, files []*domain.FileInfo) (*domain.FilesUploadResult, error) {
-
-	results := make([]domain.FileUploadResult, 0, len(files))
+	results := make(domain.FilesUploadResult, 0, len(files))
 
 	for _, file := range files {
 
@@ -62,9 +62,7 @@ func (r *LocalFileRepo) Save(_ context.Context, files []*domain.FileInfo) (*doma
 		})
 	}
 
-	return &domain.FilesUploadResult{
-		Results: results,
-	}, nil
+	return results, nil
 }
 
 func (r *LocalFileRepo) saveOneFile(file *domain.FileInfo) (fileID string, link string, err error) {

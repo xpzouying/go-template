@@ -10,9 +10,7 @@ type (
 		Data     []byte
 	}
 
-	FileInfos struct {
-		Files []*FileInfo
-	}
+	FileInfos []*FileInfo
 
 	FileUploadResult struct {
 		// FileID 为每一个上传的文件生成的唯一标识
@@ -22,39 +20,54 @@ type (
 		Link string
 	}
 
-	FilesUploadResult struct {
-		Results []FileUploadResult
-	}
+	FilesUploadResult []FileUploadResult
 )
 
-type Uploader interface {
-	Upload(ctx context.Context, fileInfos *FileInfos) (*FilesUploadResult, error)
-}
-
 type FileDO interface {
-	Uploader
-}
-
-type FileRepo interface {
-	Save(ctx context.Context, files []*FileInfo) (*FilesUploadResult, error)
+	Upload(ctx context.Context, fileInfos FileInfos) (FilesUploadResult, error)
 }
 
 type fileDO struct {
 	fileRepo FileRepo
+
+	fileMetadataRepo FileMetadataRepo
 }
 
-func NewFileDO(fileRepo FileRepo) FileDO {
+func NewFileDO(
+	fileRepo FileRepo,
+	fileMetadataRepo FileMetadataRepo,
+) FileDO {
+
 	return &fileDO{
-		fileRepo: fileRepo,
+		fileRepo:         fileRepo,
+		fileMetadataRepo: fileMetadataRepo,
 	}
 }
 
-func (l *fileDO) Upload(ctx context.Context, fileInfos *FileInfos) (*FilesUploadResult, error) {
-	files := fileInfos.Files
+func (l *fileDO) Upload(ctx context.Context, fileInfos FileInfos) (FilesUploadResult, error) {
 
-	if len(files) == 0 {
-		return &FilesUploadResult{[]FileUploadResult{}}, nil
+	if len(fileInfos) == 0 {
+		return FilesUploadResult{}, nil
 	}
 
-	return l.fileRepo.Save(ctx, files)
+	filesUploadResult, err := l.fileRepo.Save(ctx, fileInfos)
+	if err != nil {
+		return nil, err
+	}
+
+	metadatas := make([]FileMetadata, 0, len(fileInfos))
+	for i := 0; i < len(fileInfos); i++ {
+
+		metadatas = append(metadatas, FileMetadata{
+			Filename: fileInfos[i].Filename,
+			FileID:   filesUploadResult[i].FileID,
+			FileLink: filesUploadResult[i].Link,
+		})
+	}
+
+	if err := l.fileMetadataRepo.Save(ctx, metadatas); err != nil {
+		return nil, err
+	}
+
+	return filesUploadResult, nil
 }

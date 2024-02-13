@@ -4,10 +4,11 @@ import (
 	"io"
 	"mime/multipart"
 
-	"github.com/gin-gonic/gin"
-	"github.com/sirupsen/logrus"
 	"github.com/xpzouying/go-template/api/response"
 	"github.com/xpzouying/go-template/internal/domain"
+
+	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 )
 
 func (s *Service) Upload(c *gin.Context) {
@@ -37,7 +38,7 @@ func (s *Service) Upload(c *gin.Context) {
 	response.WriteSuccess(c, resp)
 }
 
-func (s *Service) readAllFiles(files []*multipart.FileHeader) (*domain.FileInfos, error) {
+func (s *Service) readAllFiles(files []*multipart.FileHeader) (domain.FileInfos, error) {
 	var fileInfos []*domain.FileInfo
 
 	for _, file := range files {
@@ -58,15 +59,13 @@ func (s *Service) readAllFiles(files []*multipart.FileHeader) (*domain.FileInfos
 		})
 	}
 
-	return &domain.FileInfos{
-		Files: fileInfos,
-	}, nil
+	return fileInfos, nil
 }
 
-func (s *Service) makeUploadResult(result *domain.FilesUploadResult) []response.UploadResult {
-	uploadResults := make([]response.UploadResult, 0, len(result.Results))
+func (s *Service) makeUploadResult(result domain.FilesUploadResult) []response.UploadResult {
+	uploadResults := make([]response.UploadResult, 0, len(result))
 
-	for _, r := range result.Results {
+	for _, r := range result {
 		uploadResults = append(uploadResults, response.UploadResult{
 			FileID: r.FileID,
 			Link:   r.Link,

@@ -4,8 +4,9 @@ import (
 	"context"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/xpzouying/go-template/internal/domain"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestSave(t *testing.T) {
@@ -23,9 +24,9 @@ func TestSave(t *testing.T) {
 	result, err := repo.Save(context.Background(), files)
 	assert.NoError(t, err)
 
-	assert.Equal(t, len(files), len(result.Results))
-	assert.NotEmpty(t, result.Results[0].FileID)
-	assert.NotEmpty(t, result.Results[0].Link)
+	assert.Equal(t, len(files), len(result))
+	assert.NotEmpty(t, result[0].FileID)
+	assert.NotEmpty(t, result[0].Link)
 }
 
 func TestSaveOneFile(t *testing.T) {

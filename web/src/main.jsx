@@ -10,6 +10,7 @@ import About from './pages/About';
 import Index from './pages/Index';
 import { loader as indexLoader } from './helpers/loader_index';
 import Contact from './routes/contact';
+import Files from './pages/Files';
 
 const router = createBrowserRouter([
   {
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
         index: true,
         element: <Index />,
         loader: indexLoader,
+      },
+      {
+        path: "file",
+        element: <Files />,
       },
       {
         path: "about",

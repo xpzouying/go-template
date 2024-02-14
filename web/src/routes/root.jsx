@@ -35,6 +35,10 @@ export default function Root() {
             </li>
 
             <li>
+              <Link to={`/file`}>Files</Link>
+            </li>
+
+            <li>
               <Link to={`/about`}>About</Link>
             </li>
           </ul>

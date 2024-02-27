@@ -53,3 +53,7 @@ go build .
 ## 后端组件
 
 - [gin-static](https://github.com/soulteary/gin-static)
+
+## 架构相关
+
+- [腾讯云 - 万字长文！Go 后台项目架构思考与重构](https://www.aminer.cn/research_report/5ea534c2ab6e30e67b2c8f6d)

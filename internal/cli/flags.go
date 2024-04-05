@@ -17,7 +17,7 @@ var RootFlags = []cli.Flag{
 		Usage:       "Bind the local server to this address.",
 		Destination: &listenAddr,
 		Required:    false,
-		DefaultText: "127.0.0.1:8080",
+		Value:       "127.0.0.1:8080",
 	},
 
 	&cli.StringFlag{
@@ -26,6 +26,6 @@ var RootFlags = []cli.Flag{
 		Usage:       "Set the log level.",
 		Destination: &logLevel,
 		Required:    false,
-		DefaultText: "debug",
+		Value:       "debug",
 	},
 }

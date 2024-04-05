@@ -2,9 +2,13 @@ package cli
 
 import (
 	"fmt"
+	"os/signal"
+	"syscall"
 
+	"github.com/pkg/errors"
 	"github.com/xpzouying/go-cmd-project-template/internal/constant"
 	"github.com/xpzouying/go-cmd-project-template/log"
+	"golang.org/x/sync/errgroup"
 
 	cli "github.com/urfave/cli/v2"
 )
@@ -12,9 +16,26 @@ import (
 var cliLogger = log.MustNewLogger("info").Sugar().Named("cli-app")
 
 func startAction(c *cli.Context) error {
-	_, err := InitConfigAndComponents()
+	cfg, err := InitConfigAndComponents()
 	if err != nil {
 		cliLogger.Fatalf("Failed to initialize config and components: %v", err)
+	}
+
+	mainCtx, stop := signal.NotifyContext(c.Context, syscall.SIGINT, syscall.SIGTERM)
+	defer stop()
+
+	wg := errgroup.Group{}
+
+	wg.Go(func() error {
+		if err := startHTTPServer(mainCtx, cfg); err != nil {
+			return errors.Wrap(err, "failed to start HTTP server")
+		}
+		return nil
+	})
+
+	if err := wg.Wait(); err != nil {
+		cliLogger.Errorf("start actions error: %v", err)
+		return err
 	}
 
 	cliLogger.Info("Starting...")

@@ -1,8 +1,12 @@
 package cli
 
 import (
+	"os"
+
 	"github.com/xpzouying/go-cmd-project-template/internal/config"
 	"github.com/xpzouying/go-cmd-project-template/log"
+
+	"github.com/pkg/errors"
 )
 
 func InitConfigAndComponents() (*config.Config, error) {
@@ -21,12 +25,25 @@ func InitConfigAndComponents() (*config.Config, error) {
 
 func loadConfig() (*config.Config, error) {
 
-	cfg := &config.Config{
-		ListenAddr: listenAddr,
-		LogLevel:   logLevel,
-	}
+	if configPath != "" {
 
-	return cfg, nil
+		f, err := os.Open(configPath)
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to open config file")
+		}
+		defer f.Close()
+
+		return config.NewConfig(f)
+
+	} else {
+
+		cfg := &config.Config{
+			ListenAddr: listenAddr,
+			LogLevel:   logLevel,
+		}
+
+		return cfg, nil
+	}
 }
 
 func initLogger(cfg *config.Config) error {

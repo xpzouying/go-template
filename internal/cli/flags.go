@@ -7,7 +7,12 @@ import (
 var (
 	// listenAddr is the address to bind the local server to.
 	listenAddr string
-	logLevel   string
+
+	// logLevel is the log level. debug, info, ...
+	logLevel string
+
+	// configPath is the path to the config file. default: empty string, not start from config file.
+	configPath string
 )
 
 var RootFlags = []cli.Flag{
@@ -27,5 +32,14 @@ var RootFlags = []cli.Flag{
 		Destination: &logLevel,
 		Required:    false,
 		Value:       "debug",
+	},
+
+	&cli.StringFlag{
+		Name:        "config",
+		Aliases:     []string{"c"},
+		Usage:       "Set the path to the config file.",
+		Destination: &configPath,
+		Required:    false,
+		Value:       "",
 	},
 }

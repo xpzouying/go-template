@@ -5,21 +5,20 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/gin-gonic/gin"
 	"github.com/xpzouying/go-cmd-project-template/internal/config"
+	"github.com/xpzouying/go-cmd-project-template/internal/router"
+
+	"github.com/gin-gonic/gin"
 )
 
 // https://gin-gonic.com/docs/examples/graceful-restart-or-stop/
 func startHTTPServer(ctx context.Context, cfg *config.Config) error {
 	cliLogger.Infof("Starting HTTP server on %s", cfg.ListenAddr)
 
-	r := gin.Default()
-	r.GET("/", func(c *gin.Context) {
+	gin.SetMode(gin.ReleaseMode)
 
-		c.JSON(200, gin.H{
-			"message": "Hello, World!",
-		})
-	})
+	r := gin.Default()
+	router.SetRouter(r)
 
 	svr := &http.Server{
 		Addr:    cfg.ListenAddr,

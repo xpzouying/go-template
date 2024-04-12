@@ -22,6 +22,9 @@ make build
 ## How to install this project
 
 ```bash
+# systemd config
+cp ./examples/go-template-project.service /etc/systemd/system/go-template.service
+
 # install bin
 cp ./dist/go-template-project /usr/local/bin/go-template
 

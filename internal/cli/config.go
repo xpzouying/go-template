@@ -4,9 +4,11 @@ import (
 	"os"
 
 	"github.com/xpzouying/go-cmd-project-template/internal/config"
+	"github.com/xpzouying/go-cmd-project-template/internal/controller"
 	"github.com/xpzouying/go-cmd-project-template/log"
 
 	"github.com/pkg/errors"
+	"go.uber.org/zap"
 )
 
 func InitConfigAndComponents() (*config.Config, error) {
@@ -17,6 +19,10 @@ func InitConfigAndComponents() (*config.Config, error) {
 	}
 
 	if err := initLogger(cfg); err != nil {
+		return nil, err
+	}
+
+	if err := initDB(cfg.DBConnStr); err != nil {
 		return nil, err
 	}
 
@@ -40,6 +46,7 @@ func loadConfig() (*config.Config, error) {
 		cfg := &config.Config{
 			ListenAddr: listenAddr,
 			LogLevel:   logLevel,
+			DBConnStr:  dbConnStr,
 		}
 
 		return cfg, nil
@@ -50,5 +57,8 @@ func initLogger(cfg *config.Config) error {
 	if err := log.InitGlobalLogger(cfg.LogLevel); err != nil {
 		return err
 	}
+
+	controller.InitLogger(zap.S().Named("controller"))
+
 	return nil
 }

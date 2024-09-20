@@ -11,6 +11,9 @@ var (
 	// logLevel is the log level. debug, info, ...
 	logLevel string
 
+	// db dsn: default: sqlite3://:memory:
+	dbConnStr string
+
 	// configPath is the path to the config file. default: empty string, not start from config file.
 	configPath string
 )
@@ -32,6 +35,14 @@ var RootFlags = []cli.Flag{
 		Destination: &logLevel,
 		Required:    false,
 		Value:       "debug",
+	},
+
+	&cli.StringFlag{
+		Name:        "db",
+		Usage:       "Set the database connection string.",
+		Destination: &dbConnStr,
+		Required:    false,
+		Value:       "sqlite3://:memory:",
 	},
 
 	&cli.StringFlag{

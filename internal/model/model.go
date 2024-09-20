@@ -28,9 +28,9 @@ func WithDBDsn(dbDsn string) DBConfigOption {
 	}
 }
 
-func InitDB(cfg *DBConfig) error {
+func InitDB(dbType DBType, dbDsn string) error {
 	var err error
-	db, err = NewDB(WithDBType(cfg.dbType), WithDBDsn(cfg.dbDsn))
+	db, err = NewDB(WithDBType(dbType), WithDBDsn(dbDsn))
 	if err != nil {
 		return errors.Wrap(err, "failed to initialize database")
 	}

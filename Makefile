@@ -34,3 +34,6 @@ build-linux-amd64:
 
 tidy:
 	$(GOBIN) mod tidy
+
+clean:
+	rm -rf $(BINDIR)

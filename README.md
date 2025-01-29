@@ -13,10 +13,10 @@ make build
 
 ```bash
 # run the bin
-./dist/go-template-project
+./dist/go-project
 
 # run the version
-./dist/go-template-project --version
+./dist/go-project --version
 ```
 
 ## How to install this project

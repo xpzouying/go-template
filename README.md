@@ -1,5 +1,7 @@
 # Go Project Template
 
+[![Build Status](https://ci.zouying.work/api/badges/xpzouying/go-template/status.svg)](https://ci.zouying.work/xpzouying/go-template)
+
 ## How to build this project
 
 1. How to build this project

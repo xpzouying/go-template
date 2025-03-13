@@ -1,0 +1,9 @@
+kind: pipeline
+type: docker
+name: go-template-pipeline
+
+steps:
+  - name: unit-tests
+    image: golang:1.21
+    commands:
+      - go test -v -count=1 ./...

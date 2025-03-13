@@ -4,6 +4,6 @@ name: go-template-pipeline
 
 steps:
   - name: unit-tests
-    image: golang:1.21
+    image: golang:latest
     commands:
       - go test -v -count=1 ./...

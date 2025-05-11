@@ -13,7 +13,7 @@ type DBType string
 const (
 	DBTypeMySQL      DBType = "mysql"
 	DBTypePostgreSQL DBType = "postgresql"
-	DBTypeSQLite     DBType = "sqlite"
+	DBTypeSQLite     DBType = "sqlite3"
 )
 
 func newDefaultDBConfig() *DBConfig {
